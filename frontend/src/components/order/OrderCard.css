@@ -1,0 +1,80 @@
+.order-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.order-header h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.order-date {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.order-body {
+  padding: 20px;
+}
+
+.order-info {
+  margin-bottom: 15px;
+}
+
+.order-info p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.order-items {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.order-items p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.order-item {
+  color: #666;
+  padding-left: 10px;
+}
+
+.order-total {
+  text-align: right;
+  font-size: 1.2rem;
+  color: #28a745;
+  padding-top: 10px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.order-footer {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

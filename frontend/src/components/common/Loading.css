@@ -1,0 +1,140 @@
+/* Loading Component Styles */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 100%;
+  padding: 2rem;
+}
+
+.loading-spinner > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #28a745;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading Text */
+.loading-spinner p {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+}
+
+/* Size Variants */
+.loading-spinner.small .spinner {
+  width: 30px;
+  height: 30px;
+  border-width: 3px;
+}
+
+.loading-spinner.small p {
+  font-size: 0.9rem;
+}
+
+.loading-spinner.large .spinner {
+  width: 70px;
+  height: 70px;
+  border-width: 5px;
+}
+
+.loading-spinner.large p {
+  font-size: 1.2rem;
+}
+
+/* Color Variants */
+.loading-spinner.primary .spinner {
+  border-top-color: #007bff;
+}
+
+.loading-spinner.success .spinner {
+  border-top-color: #28a745;
+}
+
+.loading-spinner.warning .spinner {
+  border-top-color: #ffc107;
+}
+
+.loading-spinner.danger .spinner {
+  border-top-color: #dc3545;
+}
+
+/* Full Page Loading */
+.loading-spinner.full-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 9999;
+  min-height: 100vh;
+}
+
+/* Inline Loading */
+.loading-spinner.inline {
+  display: inline-flex;
+  min-height: auto;
+  padding: 1rem;
+}
+
+.loading-spinner.inline > div {
+  flex-direction: row;
+  gap: 0.75rem;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .loading-spinner:not(.full-page) {
+    background: transparent;
+  }
+  
+  .loading-spinner .spinner {
+    border-color: #444;
+  }
+  
+  .loading-spinner p {
+    color: #ccc;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loading-spinner {
+    padding: 1.5rem;
+  }
+  
+  .loading-spinner .spinner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .loading-spinner p {
+    font-size: 0.95rem;
+  }
+}
