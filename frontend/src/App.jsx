@@ -24,6 +24,8 @@ import AddProduct from './pages/farmer/AddProduct';
 import EditProduct from './pages/farmer/EditProduct';
 import ReceivedOrders from './pages/farmer/ReceivedOrders';
 import SalesHistory from './pages/farmer/SalesHistory';
+import FarmerOrderDetails from './pages/farmer/OrderDetails';
+
 
 import './App.css';
 
@@ -58,13 +60,13 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/buyer/orders/:id" 
+              <Route
+                path="/buyer/orders/:id"
                 element={
                   <ProtectedRoute requiredRole="BUYER">
                     <OrderDetails />
                   </ProtectedRoute>
-                } 
+                }
               />
 
               {/* Farmer Routes */}
@@ -108,13 +110,13 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/farmer/orders/:id" 
+              <Route
+                path="/farmer/orders/:id"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <OrderDetails />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route 
                 path="/farmer/sales" 

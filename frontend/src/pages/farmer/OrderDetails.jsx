@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { orderApi } from '../../api/orderApi';
 import Loading from '../../components/common/Loading';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '../../utils/constants';
-import './OrderDetails.css';
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -13,24 +12,34 @@ const OrderDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchOrder();
-  }, [id]);
-
-  const fetchOrder = async () => {
-    setLoading(true);
+  const fetchOrder = useCallback(async () => {
     try {
+      console.log('=== FARMER ORDER DETAILS ===');
+      console.log('Fetching FARMER order with ID:', id);
+      console.log('Calling: orderApi.getFarmerOrderById()');
+
+      // ✅ MAKE SURE THIS CALLS getFarmerOrderById, NOT getBuyerOrderById
       const response = await orderApi.getFarmerOrderById(id);
+
+      console.log('✅ Order response:', response.data);
       setOrder(response.data);
+      setError('');
     } catch (err) {
-      setError('Failed to load order details');
+      console.error('❌ Error fetching order:', err);
+      console.error('Error response:', err.response?.data);
+      setError(err.response?.data?.message || 'Failed to load order details');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchOrder();
+  }, [fetchOrder]);
 
   const handleConfirm = async () => {
     if (!window.confirm('Are you sure you want to confirm this order?')) return;
+
     try {
       await orderApi.confirmOrder(id);
       fetchOrder();
@@ -41,6 +50,7 @@ const OrderDetails = () => {
 
   const handleReject = async () => {
     if (!window.confirm('Are you sure you want to reject this order?')) return;
+
     try {
       await orderApi.rejectOrder(id);
       fetchOrder();
@@ -50,7 +60,8 @@ const OrderDetails = () => {
   };
 
   const handleComplete = async () => {
-    if (!window.confirm('Are you sure you want to mark this order as complete?')) return;
+    if (!window.confirm('Are you sure you want to complete this order?')) return;
+
     try {
       await orderApi.completeOrder(id);
       fetchOrder();
@@ -59,33 +70,18 @@ const OrderDetails = () => {
     }
   };
 
-  if (loading) return (
-    <div className="container">
-      <div className="loading-container">
-        <Loading />
-      </div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="container">
-      <div className="error-message">{error}</div>
-    </div>
-  );
-
-  if (!order) return (
-    <div className="container">
-      <p>Order not found</p>
-    </div>
-  );
+  if (loading) return <Loading />;
+  if (error) return <div className="container"><div className="error-message">{error}</div></div>;
+  if (!order) return <div className="container"><p>Order not found</p></div>;
 
   return (
     <div className="container">
-      <button onClick={() => navigate(-1)} className="btn btn-secondary">
-        ← Back to Orders
+      <button onClick={() => navigate(-1)} className="btn btn-secondary mb-2">
+        ← Back
       </button>
 
       <div className="card">
+        {/* Order Header */}
         <div className="order-header">
           <div className="flex-between">
             <h2>Order #{order.id}</h2>
@@ -93,24 +89,52 @@ const OrderDetails = () => {
               {ORDER_STATUS_LABELS[order.status]}
             </span>
           </div>
+        </div>
 
-          <div className="order-meta">
+        {/* Order Meta Information */}
+        <div className="order-meta">
+          <div className="meta-item">
+            <span className="meta-label">Order Date</span>
+            <span className="meta-value">{formatDate(order.createdAt)}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Order Status</span>
+            <span className="meta-value">{ORDER_STATUS_LABELS[order.status]}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Total Amount</span>
+            <span className="meta-value">{formatCurrency(order.totalAmount)}</span>
+          </div>
+        </div>
+
+        {/* Buyer Information */}
+        <div className="buyer-info">
+          <h3>Buyer Details</h3>
+          <div className="order-meta" style={{ background: 'white', marginTop: '15px' }}>
             <div className="meta-item">
-              <span className="meta-label">Order Date</span>
-              <span className="meta-value">{formatDate(order.createdAt)}</span>
+              <span className="meta-label">Buyer ID</span>
+              <span className="meta-value">{order.buyerId || "Not Provided"}</span>
             </div>
             <div className="meta-item">
-              <span className="meta-label">Total Amount</span>
-              <span className="meta-value">{formatCurrency(order.totalAmount)}</span>
+              <span className="meta-label">Name</span>
+              <span className="meta-value">{order.buyerName || "Not Provided"}</span>
+            </div>
+            <div className="meta-item">
+              <span className="meta-label">Email</span>
+              <span className="meta-value">{order.buyerEmail || "Not Provided"}</span>
+            </div>
+            <div className="meta-item">
+              <span className="meta-label">Phone</span>
+              <span className="meta-value">{order.buyerPhone || "Not Provided"}</span>
+            </div>
+            <div className="meta-item" style={{ gridColumn: '1 / -1' }}>
+              <span className="meta-label">Address</span>
+              <span className="meta-value">{order.buyerAddress || "Not Provided"}</span>
             </div>
           </div>
         </div>
 
-        <div className="buyer-info">
-          <h3>Buyer Information</h3>
-          <p><strong>Name:</strong> {order.buyerName}</p>
-        </div>
-
+        {/* Order Items */}
         <div className="order-items">
           <h3>Order Items</h3>
           <table className="items-table">
@@ -118,7 +142,7 @@ const OrderDetails = () => {
               <tr>
                 <th>Product</th>
                 <th>Quantity</th>
-                <th>Unit Price</th>
+                <th>Price</th>
                 <th>Subtotal</th>
               </tr>
             </thead>
@@ -135,24 +159,26 @@ const OrderDetails = () => {
           </table>
         </div>
 
+        {/* Order Total */}
         <div className="order-total">
-          <h3>Total Amount: {formatCurrency(order.totalAmount)}</h3>
+          <h3>Total: {formatCurrency(order.totalAmount)}</h3>
         </div>
 
+        {/* Action Buttons */}
         <div className="order-actions">
           {order.status === 'PENDING' && (
             <>
               <button onClick={handleConfirm} className="btn btn-success">
-                Confirm Order
+                ✓ Confirm Order
               </button>
               <button onClick={handleReject} className="btn btn-danger">
-                Reject Order
+                ✗ Reject Order
               </button>
             </>
           )}
           {order.status === 'CONFIRMED' && (
             <button onClick={handleComplete} className="btn btn-primary">
-              Mark as Completed
+              ✓ Mark as Completed
             </button>
           )}
         </div>

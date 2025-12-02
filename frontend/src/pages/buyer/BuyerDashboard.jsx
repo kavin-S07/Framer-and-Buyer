@@ -85,7 +85,7 @@ const BuyerDashboard = () => {
       </div>
 
       <div className="dashboard-actions">
-        <h2>Quick Actions</h2>
+        <h2 className="section-title">Quick Actions</h2>
         <div className="actions-grid">
           <Link to="/buyer/orders" className="action-card">
             <div className="action-icon">📋</div>
