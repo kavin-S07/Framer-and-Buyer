@@ -11,11 +11,14 @@ export const orderApi = {
   getBuyerStats: () => axios.get('/buyer/stats'),
   
   // Farmer endpoints
-getFarmerOrders: (status) => axios.get('/farmer/orders', { params: { status } }),
-getFarmerOrderById: (id) => axios.get(`/farmer/orders/${id}`), // FIXED ✔✔✔
-confirmOrder: (id) => axios.put(`/farmer/orders/${id}/confirm`),
-rejectOrder: (id) => axios.put(`/farmer/orders/${id}/reject`),
-completeOrder: (id) => axios.put(`/farmer/orders/${id}/complete`),
-getSalesHistory: () => axios.get('/farmer/sales-history'),
-getFarmerStats: () => axios.get('/farmer/stats'),
+  getFarmerOrders: (status) => axios.get('/farmer/orders', { params: { status } }),
+
+  // ✅ FIXED: This should call /farmer/orders/{id} for farmers
+  getFarmerOrderById: (id) => axios.get(`/farmer/orders/${id}`),
+
+  confirmOrder: (id) => axios.put(`/farmer/orders/${id}/confirm`),
+  rejectOrder: (id) => axios.put(`/farmer/orders/${id}/reject`),
+  completeOrder: (id) => axios.put(`/farmer/orders/${id}/complete`),
+  getSalesHistory: () => axios.get('/farmer/sales-history'),
+  getFarmerStats: () => axios.get('/farmer/stats'),
 };

@@ -3,7 +3,6 @@ package com.example.farm_marketplace.controller;
 import com.example.farm_marketplace.dto.OrderResponse;
 import com.example.farm_marketplace.dto.ProductRequest;
 import com.example.farm_marketplace.dto.ProductResponse;
-import com.example.farm_marketplace.service.FileStorageService;
 import com.example.farm_marketplace.service.OrderService;
 import com.example.farm_marketplace.service.ProductService;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,6 @@ public class FarmerController {
 
     private final ProductService productService;
     private final OrderService orderService;
-    private final FileStorageService fileStorageService;
 
     /**
      * Create a new product
@@ -89,34 +86,6 @@ public class FarmerController {
         String email = authentication.getName();
         productService.deleteProduct(email, id);
         return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Upload product image
-     * POST /api/farmer/products/{id}/image
-     */
-    @PostMapping("/products/{id}/image")
-    public ResponseEntity<ProductResponse> uploadProductImage(
-            Authentication authentication,
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file) {
-        String email = authentication.getName();
-        String imageUrl = fileStorageService.storeFile(file);
-        ProductResponse response = productService.updateProductImage(email, id, imageUrl);
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Toggle product active/inactive status
-     * PATCH /api/farmer/products/{id}/toggle
-     */
-    @PatchMapping("/products/{id}/toggle")
-    public ResponseEntity<ProductResponse> toggleProductStatus(
-            Authentication authentication,
-            @PathVariable Long id) {
-        String email = authentication.getName();
-        ProductResponse response = productService.toggleProductStatus(email, id);
-        return ResponseEntity.ok(response);
     }
 
     /**

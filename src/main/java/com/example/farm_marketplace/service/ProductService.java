@@ -141,44 +141,6 @@ public class ProductService {
     }
 
     /**
-     * Update product image
-     */
-    @Transactional
-    public ProductResponse updateProductImage(String farmerEmail, Long productId, String imageUrl) {
-        User farmer = userService.findByEmail(farmerEmail);
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-        if (!product.getFarmer().getId().equals(farmer.getId())) {
-            throw new RuntimeException("You can only update your own products");
-        }
-
-        product.setImageUrl(imageUrl);
-        product = productRepository.save(product);
-        return mapToResponse(product);
-    }
-
-    /**
-     * Toggle product active/inactive status - MISSING METHOD!
-     */
-    @Transactional
-    public ProductResponse toggleProductStatus(String farmerEmail, Long productId) {
-        User farmer = userService.findByEmail(farmerEmail);
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-        if (!product.getFarmer().getId().equals(farmer.getId())) {
-            throw new RuntimeException("You can only update your own products");
-        }
-
-        // Toggle the active status
-        product.setActive(!product.getActive());
-        product = productRepository.save(product);
-
-        return mapToResponse(product);
-    }
-
-    /**
      * Get product entity by ID (for internal use)
      */
     public Product getProductEntityById(Long id) {

@@ -34,7 +34,7 @@ const LoginForm = () => {
     <div className="auth-form-container">
       <form onSubmit={handleSubmit} className="auth-form">
         <h2>Login</h2>
-        
+
         <ErrorMessage message={error} onClose={() => setError('')} />
 
         <div className="form-group">

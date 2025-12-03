@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
@@ -10,12 +10,13 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import NotFound from './pages/NotFound';
+import ProfilePage from './pages/ProfilePage';
 
 // Buyer Pages
 import BuyerDashboard from './pages/buyer/BuyerDashboard';
 import BrowseProducts from './pages/buyer/BrowseProducts';
 import MyOrders from './pages/buyer/MyOrders';
-import OrderDetails from './pages/buyer/OrderDetails';
+import BuyerOrderDetails from './pages/buyer/OrderDetails';
 
 // Farmer Pages
 import FarmerDashboard from './pages/farmer/FarmerDashboard';
@@ -25,7 +26,6 @@ import EditProduct from './pages/farmer/EditProduct';
 import ReceivedOrders from './pages/farmer/ReceivedOrders';
 import SalesHistory from './pages/farmer/SalesHistory';
 import FarmerOrderDetails from './pages/farmer/OrderDetails';
-
 
 import './App.css';
 
@@ -43,88 +43,98 @@ function App() {
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/products" element={<BrowseProducts />} />
 
+              {/* Profile Route - Available to all authenticated users */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+
               {/* Buyer Routes */}
-              <Route 
-                path="/buyer/dashboard" 
+              <Route
+                path="/buyer/dashboard"
                 element={
                   <ProtectedRoute requiredRole="BUYER">
                     <BuyerDashboard />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/buyer/orders" 
+              <Route
+                path="/buyer/orders"
                 element={
                   <ProtectedRoute requiredRole="BUYER">
                     <MyOrders />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route
                 path="/buyer/orders/:id"
                 element={
                   <ProtectedRoute requiredRole="BUYER">
-                    <OrderDetails />
+                    <BuyerOrderDetails />
                   </ProtectedRoute>
                 }
               />
 
               {/* Farmer Routes */}
-              <Route 
-                path="/farmer/dashboard" 
+              <Route
+                path="/farmer/dashboard"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <FarmerDashboard />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/farmer/products" 
+              <Route
+                path="/farmer/products"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <MyProducts />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/farmer/products/add" 
+              <Route
+                path="/farmer/products/add"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <AddProduct />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/farmer/products/edit/:id" 
+              <Route
+                path="/farmer/products/edit/:id"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <EditProduct />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/farmer/orders" 
+              <Route
+                path="/farmer/orders"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <ReceivedOrders />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route
                 path="/farmer/orders/:id"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
-                    <OrderDetails />
+                    <FarmerOrderDetails />
                   </ProtectedRoute>
                 }
               />
-              <Route 
-                path="/farmer/sales" 
+              <Route
+                path="/farmer/sales"
                 element={
                   <ProtectedRoute requiredRole="FARMER">
                     <SalesHistory />
                   </ProtectedRoute>
-                } 
+                }
               />
 
               {/* 404 Route */}
